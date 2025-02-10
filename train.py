@@ -383,6 +383,8 @@ if __name__ == '__main__':
     def print_model_summary():
         print(" >>>> ======= MODEL HYPER-PARAMETERS ======= <<<< ")
         print(OmegaConf.to_yaml(net_model.hparams, resolve=True))
+        OmegaConf.save(net_model.hparams, os.path.join(wdb_ckpt.parent,"hparams.yaml"))
+        #print("hparams_Path:",os.path.join(wdb_ckpt.parent,"hparams.yaml"))
         print(" >>>> ====================================== <<<< ")
     
     print_model_summary()
