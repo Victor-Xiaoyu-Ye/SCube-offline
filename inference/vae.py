@@ -32,7 +32,7 @@ from pycg import exp
 from scube.utils import wandb_util
 from loguru import logger 
 from tqdm import tqdm
-from scube.utils.common_util import batch2device, get_default_parser, create_model_from_args
+from scube.utils.common_util import batch2device, get_default_parser, create_model_from_args, create_model_from_args_offline
 from scube.utils.gaussian_util import save_splat_file_RGB
 from scube.data.base import DatasetSpec as DS
 
@@ -82,7 +82,7 @@ def main():
                  (known_args.split + f"_starting_at_{known_args.val_starting_frame}" + known_args.suffix)
     saving_dir.mkdir(parents=True, exist_ok=True)
 
-    net_model_vae, args, global_step_gsm = create_model_from_args(known_args.ckpt_vae+":last", known_args, get_parser())
+    net_model_vae, args, global_step_gsm = create_model_from_args_offline(known_args.ckpt_vae+":last", known_args, get_parser())
     net_model_vae.cuda()
 
     if known_args.split == 'test':

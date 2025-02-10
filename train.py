@@ -185,7 +185,7 @@ if __name__ == '__main__':
         if not os.path.exists(program_args.wandb_base):
             os.makedirs(program_args.wandb_base)
             
-        WANDB_USER_NAME = 'nvidia-toronto'
+        WANDB_USER_NAME = 'yexy'
         wname = program_args.wname
         sep_pos = str(model_args.name).find('/')
         project_name = model_args.name[:sep_pos]

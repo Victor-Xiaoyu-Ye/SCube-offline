@@ -188,8 +188,8 @@ class Model(BaseModel):
                     pred_grid_ = fvdb.GridBatch().to(pred_grid.device)
                     pred_grid_.set_from_ijk(pred_grid.ijk.jdata, voxel_sizes=pred_grid.voxel_sizes, origins=pred_grid.origins),
 
-                    rendered = offsreen_mesh_renderer_for_vae([(gt_grid_, gt_semantic), (pred_grid_, pred_semantic)])
-                    self.log_image('img/sample', rendered)
+                    # rendered = offsreen_mesh_renderer_for_vae([(gt_grid_, gt_semantic), (pred_grid_, pred_semantic)])
+                    # self.log_image('img/sample', rendered)
 
         loss_sum = loss_dict.get_sum()
         self.log('val_loss' if is_val else 'train_loss/sum', loss_sum)

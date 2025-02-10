@@ -62,6 +62,46 @@ def create_model_from_args(args_ckpt, known_args, parser, ckpt_name=None, hparam
 
     return net_model.eval(), args, global_step
 
+import yaml
+def load_local_config(config_path):
+    with open(config_path, "r") as f:
+        return yaml.safe_load(f)
+    
+def create_model_from_args_offline(args_ckpt, known_args, parser, ckpt_name=None, hparam_update=None):
+    # load local config
+    local_config = load_local_config(os.path.join(args_ckpt +  "hparams.yaml"))
+    print("hparams_location:",os.path.join(args_ckpt +  "hparams.yaml"))
+    model_args = omegaconf.OmegaConf.create(local_config)
+    args = parser.parse_args(additional_args=model_args)
+    
+    # force offline mode (optional)
+    os.environ["WANDB_MODE"] = "offline"
+    
+    # load local ckpt
+    args_ckpt = args_ckpt + "last.ckpt"
+    print("checkpoint found!:",args_ckpt)
+    
+    if hasattr(args, 'nosync'):
+        os.environ['NO_SYNC'] = '1'
+    
+    net_module = importlib.import_module("scube.models." + args.model).Model
+    ckpt_path = args_ckpt
+    
+    if ckpt_name is not None:
+        ckpt_path = str(ckpt_path).replace("last", ckpt_name)
+        logger.info(f"Use ckpt: {ckpt_path}")
+    
+    print(f"Load model from {ckpt_path}")
+    if hparam_update is not None:
+        for k, v in hparam_update.items():
+            OmegaConf.update(args, k, v)
+    net_model = net_module.load_from_checkpoint(ckpt_path, hparams=args, strict=False)
+    
+    net_state_dict = torch.load(ckpt_path, map_location="cpu")
+    global_step = net_state_dict["global_step"]
+    
+    return net_model.eval(), args, global_step
+
 def merge_images_in_folder(image_folder):
     """
     image folder: str,
