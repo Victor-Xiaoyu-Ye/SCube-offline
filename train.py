@@ -383,8 +383,6 @@ if __name__ == '__main__':
     def print_model_summary():
         print(" >>>> ======= MODEL HYPER-PARAMETERS ======= <<<< ")
         print(OmegaConf.to_yaml(net_model.hparams, resolve=True))
-        OmegaConf.save(net_model.hparams, os.path.join(wdb_ckpt.parent,"hparams.yaml"))
-        #print("hparams_Path:",os.path.join(wdb_ckpt.parent,"hparams.yaml"))
         print(" >>>> ====================================== <<<< ")
     
     print_model_summary()
@@ -403,6 +401,8 @@ if __name__ == '__main__':
             trainer.validate(net_model, ckpt_path=last_ckpt_path)
         with exp.pt_profile_named("training", "1.json"):
             trainer.fit(net_model, ckpt_path=last_ckpt_path)
+            print("checkpoint_callback.dirpath",checkpoint_callback.dirpath)
+            OmegaConf.save(net_model.hparams, os.path.join(Path(checkpoint_callback.dirpath),"hparams.yaml"))
     except Exception as ex:
         e = ex
         # https://stackoverflow.com/questions/52081929/pdb-go-to-a-frame-in-exception-within-exception
