@@ -855,7 +855,7 @@ class Model(BaseModel):
                     cond_dict['text_emb'] = text_emb
                     cond_dict['text_emb_mask'] = mask
                 
-                if self.trainer.global_rank == 0: # only log the image on rank 0
+                if self.trainer.global_rank == -1: # only log the image on rank 0
                     if batch_idx == 0 or batch_idx % self.val_sample_interval == 0:
                         logger.info("running visualisation on rank 0...")
                         with self.ema_scope("Plotting"):

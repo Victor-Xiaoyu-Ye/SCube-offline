@@ -123,7 +123,7 @@ class Model(BaseModel):
             self.log_dict_prefix('val_loss', loss_dict)
             self.log_dict_prefix('val_loss', latent_dict)
 
-            if self.trainer.global_rank == 0: # only log the image on rank 0
+            if self.trainer.global_rank == -1: # only log the image on rank 0
                 if batch_idx == 0 or batch_idx % self.val_sample_interval == 0: 
                     logger.info("running visualisation on rank 0...")
 
