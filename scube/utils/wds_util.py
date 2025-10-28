@@ -81,6 +81,7 @@ class ImageHandler:
         :param data: binary data
         """
         import PIL.Image
+        from PIL.Image import Image, ImageFile
 
         extension = re.sub(r".*[.]", "", key)
         if extension.lower() not in self.extensions:
